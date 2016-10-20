@@ -1,0 +1,39 @@
+golang版本是1.7.3 所以Dockerfile如下：
+FROM golang:1.7.3
+#作者省略
+ADD main.go /go/src/main.go #将本地的main.go函数添加到容器的/go/src路径
+ADD run.sh /run.sh   #添加执行函数
+RUN chmod +x /run.sh  #权限
+CMD ["/bin/bash","/run.sh"]
+#EXPOSE 8080
+
+其中的执行函数run.sh 较简单，就两行
+#!/bin/bash
+go run /go/src/main.go
+其中main.go文件如下：
+package main
+ 
+import(
+"fmt"
+"net/http"
+"runtime"
+)
+ 
+func indexHandler( w http.ResponseWriter, r *http.Request){
+fmt.Fprintf(w, "hello world, I'm running on %s with an %s CPU ", runtime.GOOS,runtime.GOARCH)
+ 
+}
+ 
+func main(){
+http.HandleFunc("/", indexHandler)
+http.ListenAndServe(":8080",nil)
+}
+
+以上是三个文件放在同一目录。
+执行Dockerfile 文件生成镜像：
+docker build -t test .
+在生成的镜像上运行一个容器（这里运行交互模式，启动到前台）：
+docker run -it -p 8080:8080 --name test2 test
+打开浏览器输入服务器地址和绑定的端口号，我这里是：
+http://192.168.6.81:8080
+以上是最基础的运行方式，先记下来。
