@@ -43,3 +43,30 @@ FROM golang:1.7.3
 ADD main.go /main.go
 CMD ["go","run","/main.go"]
 生成镜像和运行容器同上。
+也可以基于golang web 框架beego：
+Dockerfile:
+FROM golang:1.7.3
+RUN go get -u github.com/astaxie/beego
+RUN go get -u github.com/beego/bee
+ADD web.go /go/src/web.go
+CMD ["go","run","/go/src/web.go"]
+web.go
+package main
+
+import (
+    "github.com/astaxie/beego"
+)
+
+type MainController struct {
+    beego.Controller
+}
+
+func (this *MainController) Get() {
+    this.Ctx.WriteString("hello world")
+}
+
+func main() {
+    beego.Router("/", &MainController{})
+    beego.Run()
+}
+生成镜像同上（安装beego layer时会时常失败，姑且认为是服务器连接或者网速的问题）
