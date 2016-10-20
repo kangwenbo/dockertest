@@ -35,5 +35,11 @@ docker build -t test .
 在生成的镜像上运行一个容器（这里运行交互模式，启动到前台）：
 docker run -it -p 8080:8080 --name test2 test
 打开浏览器输入服务器地址和绑定的端口号，我这里是：
-http://192.168.6.81:8080
+http://192.168.6.81:8080/
 以上是最基础的运行方式，先记下来。
+当然也可以”更基础“,省去run.sh文件，直接运行go文件 :
+Dockerfile :
+FROM golang:1.7.3
+ADD main.go /main.go
+CMD ["go","run","/main.go"]
+生成镜像和运行容器同上。
