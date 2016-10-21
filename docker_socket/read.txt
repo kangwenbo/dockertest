@@ -1,0 +1,8 @@
+一共就两步：
+#不知道为什么如果Dockerfile中EXPOSE 了端口号1024，运行客户端的client就连接不上容器里的socket server 
+#不加 EXPOSE 1024 反而能成功，我操
+#生成镜像
+docker build -t socket .
+#运行容器
+docker run -d -p 1024:1024 --name socket2 socket
+ 
